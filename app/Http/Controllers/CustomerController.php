@@ -12,10 +12,15 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $customers = Customer::all();
+        $customers = [];
+        $allCustomers = Customer::all();
+        foreach($allCustomers as $customer)
+        {
+            if ($request->user()->can('anyAction', $customer)) array_push($customers, $customer);
+        }
         return view('customers.index', compact('customers'));
     }
 
@@ -24,10 +29,11 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
-        return view('customers.create');
+        $user = $request->user();
+        return view('customers.create', ["user"=>$user]);
     }
 
     /**
@@ -51,11 +57,14 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         //
         $customer = Customer::find($id);
+
+        if ($request->user()->can('anyAction', $customer))
         return view("customers.show", ["customer" => $customer]);
+        else abort(403);
     }
 
     /**
@@ -64,11 +73,14 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         //
         $customer = Customer::find($id);
+        if ($request->user()->can('anyAction', $customer))
         return view("customers.edit", ["customer" => $customer]);
+        else abort(403);
+        
     }
 
     /**
@@ -83,9 +95,13 @@ class CustomerController extends Controller
         //
         $request->validate(["user_id" => "required"]);
         $customer = Customer::find($id);
-        $customer->user_id = $request->input("user_id");
-        $customer->save();
-        return redirect("customers/".$id);
+        if ($request->user()->can('anyAction', $customer))
+        {
+            $customer->user_id = $request->input("user_id");
+            $customer->save();
+            return redirect("customers/".$id);
+        }
+        else abort(403);
     }
 
     /**
@@ -94,11 +110,15 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         //
         $customer = Customer::find($id);
-        $customer->delete();
-        return redirect('/customers');
+        if ($request->user()->can('anyAction', $customer))
+        {
+            $customer->delete();
+            return redirect('/customers');
+        }
+        else abort(403);
     }
 }

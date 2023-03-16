@@ -13,7 +13,7 @@ class CustomerPolicy
     public function anyAction(User $user, Customer $customer)
     {
         //
-        return $user->id === $customer->user_id;
+        return $user->id === $customer->user->id;
     }
 
     /**
