@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Customer;
+use App\Models\User;
+use App\Models\Role;
 
-class CustomerTableSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,10 +15,12 @@ class CustomerTableSeeder extends Seeder
      */
     public function run()
     {
+        //
+        $commonUser = Role::where('name', "user")->first();
+
         for($i=1; $i<=5; $i++)
         {
-            Customer::factory()->create(["id"=> (($i*2)-1), "user_id"=>$i]);
-            Customer::factory()->create(["id"=> ($i*2),"user_id"=>$i]);
+            User::factory()->create(["id"=> $i])->attachRole($commonUser);
         }
     }
 }

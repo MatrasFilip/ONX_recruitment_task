@@ -10,6 +10,14 @@ class CustomerPolicy
 {
     use HandlesAuthorization;
 
+
+    public function before(User $user, string $ability)
+    {
+
+        if ($user->hasRole("administrator"))    return true;
+        else return null;
+    }
+
     public function anyAction(User $user, Customer $customer)
     {
         //
