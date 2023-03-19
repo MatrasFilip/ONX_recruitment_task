@@ -23,4 +23,3 @@ Route::middleware('auth')->group(function ()
 {
     Route::resource('customers', CustomerController::class);
 });
-

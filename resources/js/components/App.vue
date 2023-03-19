@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Vue Router Demo App</h1>
+        <h1>Przykładowy nagłówek!</h1>
  
         <p>
             <router-link :to="{ name: 'hello' }" style ="margin-right:10px;">Hello World</router-link>
@@ -9,12 +9,12 @@
             <router-link :to="{ name: 'UserCard' }">Karta Użytkownika</router-link>
         </p>
         <hr>
- 
         <div class="container">
             <router-view></router-view>
         </div>
     </div>
 </template>
 <script>
-    export default {}
+    export default {
+    }
 </script>
